@@ -20,13 +20,10 @@ async function main() {
   const ViewLiquidityLib = await ethers.getContractFactory("ViewLiquidity");
 
   const curvesLib = await deployContract({
-    name: "CuvesLib",
+    name: "CurvesLib",
     deployer: user,
     factory: CurvesLib,
     args: [],
-    opts: {
-      gasLimit: 800000,
-    },
   });
 
   const orchestratorLib = await deployContract({
@@ -34,9 +31,6 @@ async function main() {
     deployer: user,
     factory: OrchestratorLib,
     args: [],
-    opts: {
-      gasLimit: 2000000,
-    },
   });
 
   const proportionalLiquidityLib = await deployContract({
@@ -44,9 +38,6 @@ async function main() {
     deployer: user,
     factory: ProportionalLiquidityLib,
     args: [],
-    opts: {
-      gasLimit: 2000000,
-    },
   });
 
   const swapsLib = await deployContract({
@@ -54,9 +45,6 @@ async function main() {
     deployer: user,
     factory: SwapsLib,
     args: [],
-    opts: {
-      gasLimit: 3000000,
-    },
   });
 
   const viewLiquidityLib = await deployContract({
@@ -64,9 +52,6 @@ async function main() {
     deployer: user,
     factory: ViewLiquidityLib,
     args: [],
-    opts: {
-      gasLimit: 400000,
-    },
   });
 
   const CurveFactory = await ethers.getContractFactory("CurveFactory", {
@@ -86,9 +71,6 @@ async function main() {
     deployer: user,
     factory: CurveFactory,
     args: [],
-    opts: {
-      gasLimit: 4000000,
-    },
   });
 
   const router = await deployContract({
@@ -96,9 +78,6 @@ async function main() {
     deployer: user,
     factory: RouterFactory,
     args: [curveFactory.address],
-    opts: {
-      gasLimit: 4000000,
-    },
   });
 
   const output = {
@@ -113,8 +92,10 @@ async function main() {
     router: router.address,
   };
 
-  const outputPath = path.join(__dirname, new Date().getTime().toString() + `_factory_deployed.json`);
-  fs.writeFileSync(outputPath, JSON.stringify(output, null, 4));
+  const network = await hre.ethers.provider.getNetwork();
+  const outputDir = path.join(__dirname, `${network.chainId}`);
+  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
+  fs.writeFileSync(path.join(outputDir, `factory_deployed.json`), JSON.stringify(output, null, 4));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

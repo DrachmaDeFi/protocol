@@ -1,0 +1,11 @@
+{
+    "assimilators": {
+        "UsdcToUsdAssimilator": "0xf88aAaaA2CBADb4aF7e10EaF7dC5a7c6481a02d1",
+        "UsdtToUsdAssimilator": "0xf47B1e18B82Db29e43D94a9303E501498D37b7DF",
+        "UsdoToUsdAssimilator": "0xbFf568f600F6cdB2eF7Ac2815B80727DfC73B980"
+    },
+    "curves": {
+        "Drachma USDC USDT LP": "0xF3f03c110e01dE844fE8a608063bDC9b6c6cdC9f",
+        "Drachma USDC USDO LP": "0x2bDB2B67470bF45682A05b4453fA3C135b3087c4"
+    }
+}

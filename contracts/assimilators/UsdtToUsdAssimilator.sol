@@ -20,25 +20,22 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../lib/ABDKMath64x64.sol";
 import "../interfaces/IAssimilator.sol";
-import "../interfaces/IOracle.sol";
 
-contract XsgdToUsdAssimilator is IAssimilator {
+contract UsdtToUsdAssimilator is IAssimilator {
     using ABDKMath64x64 for int128;
     using ABDKMath64x64 for uint256;
 
     using SafeMath for uint256;
 
-    IERC20 private constant usdc = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+    IERC20 private constant usdc = IERC20(0xEA32A96608495e54156Ae48931A7c20f0dcc1a21);
 
-    IOracle private constant oracle = IOracle(0xe25277fF4bbF9081C75Ab0EB13B4A13a721f3E13);
-    IERC20 private constant xsgd = IERC20(0x70e8dE73cE538DA2bEEd35d14187F6959a8ecA96);
+    IERC20 private constant xsgd = IERC20(0xbB06DCA3AE6887fAbF931640f67cab3e3a16F4dC);
 
     // solhint-disable-next-line
     constructor() {}
 
     function getRate() public view override returns (uint256) {
-        (, int256 price, , , ) = oracle.latestRoundData();
-        return uint256(price);
+        return uint256(100000000);
     }
 
     // takes raw xsgd amount, transfers it in, calculates corresponding numeraire amount and returns it
