@@ -118,5 +118,6 @@ dist
 cache
 artifacts
 typechain
+truffle*
 
 .vscode/

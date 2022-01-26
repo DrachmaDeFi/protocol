@@ -1,13 +1,29 @@
-# DFX Protocol V0.5
+# Drachma Protocol
 
-A decentralized foreign exchange protocol optimized for stablecoins.
+A decentralized exchange protocol optimized for lower slippage ERC20 token swaps.
 
-[![Discord](https://img.shields.io/discord/786747729376051211.svg?color=768AD4&label=discord&logo=https%3A%2F%2Fdiscordapp.com%2Fassets%2F8c9701b98ad4372b58f13fd9f65f966e.svg)](http://discord.dfx.finance/)
-[![Twitter Follow](https://img.shields.io/twitter/follow/DFXFinance.svg?label=DFXFinance&style=social)](https://twitter.com/DFXFinance)
+### Audits
+ - By [Trail of Bits](audits/2021-05-03-Trail_of_Bits.pdf).
+ - By [Consensys Diligence](https://consensys.net/diligence/audits/2020/06/shell-protocol/shell-protocol-audit-2020-06.pdf) (Shell Protocol).
+
+### Deployed Addresses
+The deployed contract addresses can be found [here](/scripts/1088/).
+
+
+### Key Differences
+The following changes are made on Drachma Smart Contracts.
+- Addresses of ERC20 tokens updated according to the Metis Andromeda chain.
+- Price of stable coins is assumed to be equal to 1 US Dollar.
+
+Contract Differences
+ - [Zap.sol](https://github.com/dfx-finance/protocol/compare/0983bfa9abbcba4053d18748ed91e634bf82363a...DrachmaDeFi:de69e8a0adad7f8d30e8f251f3fff48a5938fe07#diff-16375b2cbbb26879b98f6cad1fb04d53ca53f4f602f70343f8b444edabf5a49b)
+ - [UsdcToUsdAssimilator.sol](https://github.com/dfx-finance/protocol/compare/0983bfa9abbcba4053d18748ed91e634bf82363a...DrachmaDeFi:de69e8a0adad7f8d30e8f251f3fff48a5938fe07#diff-784fa08d051f54a4859f70d6bdf7c13ade0884c01bd58d205a9eb1d0a1698b2c)
+ - [UsdtToUsdAssimilator.sol](https://github.com/dfx-finance/protocol/compare/0983bfa9abbcba4053d18748ed91e634bf82363a...DrachmaDeFi:de69e8a0adad7f8d30e8f251f3fff48a5938fe07#diff-29e678dd73e2f83abe9a01ed3ef3d395e04a6a83d275f8f192c937a9e4f953e1)
+ - [UsdoToUsdAssimilator.sol](https://github.com/dfx-finance/protocol/compare/0983bfa9abbcba4053d18748ed91e634bf82363a...DrachmaDeFi:de69e8a0adad7f8d30e8f251f3fff48a5938fe07#diff-45126a221903f99691bac20df7b909371fba5132a61306f81994454081233cbc)
 
 ## Overview
 
-DFX v0.5 is a fork of [shellprotocol@48dac1c](https://github.com/cowri/shell-solidity-v1/tree/48dac1c1a18e2da292b0468577b9e6cbdb3786a4), an AMM for baskets of like-valued pairs. An audit of that protocol was previously done by [Consensys Diligence](https://consensys.net/diligence/audits/2020/06/shell-protocol/shell-protocol-audit-2020-06.pdf).
+The protocol is a fork of [DFX Protocol@0983bfa](https://github.com/dfx-finance/protocol/tree/0983bfa9abbcba4053d18748ed91e634bf82363a) which itself is a fork of [shellprotocol@48dac1c](https://github.com/cowri/shell-solidity-v1/tree/48dac1c1a18e2da292b0468577b9e6cbdb3786a4), an AMM for baskets of like-valued pairs.
 
 There are two major parts to the protocol: **Assimilators** and **Curves** (formerly Shells). Assimilators allow the AMM to handle pairs of different value while also retrieving reported oracle prices for respective currencies. Curves allow the custom parameterization of the bonding curve with dynamic fees, halting bounderies, etc.
 

@@ -1,6 +1,6 @@
 {
-  "name": "protocols",
-  "version": "0.0.3a",
+  "name": "protocol",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dfx-finance/protocols.git"
+    "url": "git+https://github.com/DrachmaDeFi/protocol.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dfx-finance/protocols/issues"
+    "url": "https://github.com/DrachmaDeFi/protocol/issues"
   },
-  "homepage": "https://github.com/dfx-finance/protocols#readme",
+  "homepage": "https://github.com/DrachmaDeFi/protocol#readme",
   "dependencies": {
     "@ethersproject/abstract-provider": "^5.0.10",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
