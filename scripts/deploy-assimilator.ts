@@ -27,7 +27,7 @@ async function main() {
   const outputFilePath = path.join(outputDir, `lp.json`);
   if (!fs.existsSync(outputFilePath)) {
     fs.writeFileSync(outputFilePath, JSON.stringify({ assimilators: {}, curves: {} }, null, 4));
-  };
+  }
 
   const deployments = JSON.parse(fs.readFileSync(outputFilePath, "utf-8"));
   deployments.assimilators[ASSIMILATOR_CONTRACT] = assm.address;

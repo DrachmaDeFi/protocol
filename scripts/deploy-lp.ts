@@ -57,13 +57,13 @@ async function main() {
     console.log("new curve", newCurveAddress);
 
     const curve = (await ethers.getContractAt("Curve", newCurveAddress)) as Curve;
-    
+
     console.log("setting params");
     const tx2 = await curve.setParams(ALPHA, BETA, MAX, EPSILON, LAMBDA);
     console.log("tx hash", tx2.hash);
     await tx2.wait();
     console.log("params setted");
-    
+
     const tx3 = await curve.turnOffWhitelisting();
     console.log("tx hash", tx3.hash);
     await tx3.wait();
