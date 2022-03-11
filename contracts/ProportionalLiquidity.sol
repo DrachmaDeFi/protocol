@@ -25,6 +25,9 @@ library ProportionalLiquidity {
         external
         returns (uint256 curves_, uint256[] memory)
     {
+        Assimilators.updateRate(curve.assets[0].addr);
+        Assimilators.updateRate(curve.assets[1].addr);
+
         int128 __deposit = _deposit.divu(1e18);
 
         uint256 _length = curve.assets.length;
@@ -163,6 +166,9 @@ library ProportionalLiquidity {
         external
         returns (uint256[] memory)
     {
+        Assimilators.updateRate(curve.assets[0].addr);
+        Assimilators.updateRate(curve.assets[1].addr);
+
         uint256 _length = curve.assets.length;
 
         (int128 _oGLiq, int128[] memory _oBals) = getGrossLiquidityAndBalances(curve);

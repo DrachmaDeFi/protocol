@@ -14,6 +14,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 pragma solidity ^0.7.3;
+pragma experimental ABIEncoderV2;
 
 import "./lib/ABDKMath64x64.sol";
 
@@ -398,7 +399,16 @@ contract Curve is Storage, MerkleProver {
         uint256 _minTargetAmount,
         uint256 _deadline
     ) external deadline(_deadline) transactable nonReentrant returns (uint256 targetAmount_) {
-        targetAmount_ = Swaps.originSwap(curve, _origin, _target, _originAmount, msg.sender);
+        Swaps.SwapParams memory p =
+            Swaps.SwapParams({
+                _origin: _origin,
+                _target: _target,
+                _amount: _originAmount,
+                _recipient: msg.sender,
+                _protocolFeeRecipient: owner
+            });
+
+        targetAmount_ = Swaps.originSwap(curve, p);
 
         require(targetAmount_ >= _minTargetAmount, "Curve/below-min-target-amount");
     }
@@ -430,7 +440,16 @@ contract Curve is Storage, MerkleProver {
         uint256 _targetAmount,
         uint256 _deadline
     ) external deadline(_deadline) transactable nonReentrant returns (uint256 originAmount_) {
-        originAmount_ = Swaps.targetSwap(curve, _origin, _target, _targetAmount, msg.sender);
+        Swaps.SwapParams memory p =
+            Swaps.SwapParams({
+                _origin: _origin,
+                _target: _target,
+                _amount: _targetAmount,
+                _recipient: msg.sender,
+                _protocolFeeRecipient: owner
+            });
+
+        originAmount_ = Swaps.targetSwap(curve, p);
 
         require(originAmount_ <= _maxOriginAmount, "Curve/above-max-origin-amount");
     }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.7.3;
+pragma experimental ABIEncoderV2;
 
 import "./Assimilators.sol";
 import "./Storage.sol";
@@ -9,8 +10,10 @@ import "./lib/UnsafeMath64x64.sol";
 import "./lib/ABDKMath64x64.sol";
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 library Swaps {
+    using SafeERC20 for IERC20;
     using ABDKMath64x64 for int128;
     using UnsafeMath64x64 for int128;
     using ABDKMath64x64 for uint256;
@@ -40,28 +43,51 @@ library Swaps {
         return (o_, t_);
     }
 
-    function originSwap(
-        Storage.Curve storage curve,
-        address _origin,
-        address _target,
-        uint256 _originAmount,
-        address _recipient
-    ) external returns (uint256 tAmt_) {
-        (Storage.Assimilator memory _o, Storage.Assimilator memory _t) = getOriginAndTarget(curve, _origin, _target);
+    function _executeProtocolFee(
+        address _token,
+        address _recipient,
+        int128 _amt,
+        int128 _amtAfterFee
+    ) private {
+        // calculate 10% of overall swap fee
+        int128 _protocolFee = _amt.sub(_amtAfterFee).div(10);
+        if (_protocolFee > 0) IERC20(_token).safeTransfer(_recipient, uint256(_protocolFee));
+    }
+
+    struct SwapParams {
+        address _origin;
+        address _target;
+        uint256 _amount;
+        address _recipient;
+        address _protocolFeeRecipient;
+    }
+
+    function originSwap(Storage.Curve storage curve, SwapParams memory p) external returns (uint256 tAmt_) {
+        uint256 _originAmount = p._amount;
+
+        (Storage.Assimilator memory _o, Storage.Assimilator memory _t) =
+            getOriginAndTarget(curve, p._origin, p._target);
+
+        Assimilators.updateRate(_o.addr);
+        Assimilators.updateRate(_t.addr);
 
         if (_o.ix == _t.ix)
-            return Assimilators.outputNumeraire(_t.addr, _recipient, Assimilators.intakeRaw(_o.addr, _originAmount));
+            return Assimilators.outputNumeraire(_t.addr, p._recipient, Assimilators.intakeRaw(_o.addr, _originAmount));
 
         (int128 _amt, int128 _oGLiq, int128 _nGLiq, int128[] memory _oBals, int128[] memory _nBals) =
             getOriginSwapData(curve, _o.ix, _t.ix, _o.addr, _originAmount);
 
         _amt = CurveMath.calculateTrade(curve, _oGLiq, _nGLiq, _oBals, _nBals, _amt, _t.ix);
 
+        int128 _initialAmt = _amt;
+
         _amt = _amt.us_mul(ONE - curve.epsilon);
 
-        tAmt_ = Assimilators.outputNumeraire(_t.addr, _recipient, _amt);
+        _executeProtocolFee(p._origin, p._protocolFeeRecipient, _initialAmt, _amt);
 
-        emit Trade(msg.sender, _origin, _target, _originAmount, tAmt_);
+        tAmt_ = Assimilators.outputNumeraire(_t.addr, p._recipient, _amt);
+
+        emit Trade(msg.sender, p._origin, p._target, _originAmount, tAmt_);
     }
 
     function viewOriginSwap(
@@ -85,17 +111,17 @@ library Swaps {
         tAmt_ = Assimilators.viewRawAmount(_t.addr, _amt.abs());
     }
 
-    function targetSwap(
-        Storage.Curve storage curve,
-        address _origin,
-        address _target,
-        uint256 _targetAmount,
-        address _recipient
-    ) external returns (uint256 oAmt_) {
-        (Storage.Assimilator memory _o, Storage.Assimilator memory _t) = getOriginAndTarget(curve, _origin, _target);
+    function targetSwap(Storage.Curve storage curve, SwapParams memory p) external returns (uint256 oAmt_) {
+        uint256 _targetAmount = p._amount;
+
+        (Storage.Assimilator memory _o, Storage.Assimilator memory _t) =
+            getOriginAndTarget(curve, p._origin, p._target);
+
+        Assimilators.updateRate(_o.addr);
+        Assimilators.updateRate(_t.addr);
 
         if (_o.ix == _t.ix)
-            return Assimilators.intakeNumeraire(_o.addr, Assimilators.outputRaw(_t.addr, _recipient, _targetAmount));
+            return Assimilators.intakeNumeraire(_o.addr, Assimilators.outputRaw(_t.addr, p._recipient, _targetAmount));
 
         // If the origin is the quote currency (i.e. usdc)
         // we need to make sure to massage the _targetAmount
@@ -111,7 +137,7 @@ library Swaps {
         }
 
         (int128 _amt, int128 _oGLiq, int128 _nGLiq, int128[] memory _oBals, int128[] memory _nBals) =
-            getTargetSwapData(curve, _t.ix, _o.ix, _t.addr, _recipient, _targetAmount);
+            getTargetSwapData(curve, _t.ix, _o.ix, _t.addr, p._recipient, _targetAmount);
 
         _amt = CurveMath.calculateTrade(curve, _oGLiq, _nGLiq, _oBals, _nBals, _amt, _o.ix);
 
@@ -123,11 +149,15 @@ library Swaps {
             _amt = _amt.mul(Assimilators.getRate(_t.addr).divu(1e8));
         }
 
+        int128 _initialAmt = _amt;
+
         _amt = _amt.us_mul(ONE + curve.epsilon);
+
+        _executeProtocolFee(p._origin, p._protocolFeeRecipient, _initialAmt, _amt);
 
         oAmt_ = Assimilators.intakeNumeraire(_o.addr, _amt);
 
-        emit Trade(msg.sender, _origin, _target, oAmt_, _targetAmount);
+        emit Trade(msg.sender, p._origin, p._target, oAmt_, _targetAmount);
     }
 
     function viewTargetSwap(

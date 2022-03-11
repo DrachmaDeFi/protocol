@@ -151,4 +151,10 @@ library Assimilators {
 
         amt_ = abi.decode(delegate(_assim, data), (uint256));
     }
+
+    function updateRate(address _assim) internal {
+        bytes memory data = abi.encodeWithSelector(iAsmltr.updateRate.selector);
+
+        delegate(_assim, data);
+    }
 }

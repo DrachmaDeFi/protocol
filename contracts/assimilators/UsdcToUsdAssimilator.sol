@@ -19,19 +19,24 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "../lib/ABDKMath64x64.sol";
 import "../interfaces/IAssimilator.sol";
+import "../interfaces/IOracleTwap.sol";
 
 contract UsdcToUsdAssimilator is IAssimilator {
     using ABDKMath64x64 for int128;
     using ABDKMath64x64 for uint256;
 
+    IOracleTwap public constant oracle = IOracleTwap(0x87ac4b06EB0db3A4eE13DF544A540F8f4a8E0679);
     IERC20 private constant usdc = IERC20(0xEA32A96608495e54156Ae48931A7c20f0dcc1a21);
 
     // solhint-disable-next-line
     constructor() {}
 
-    // solhint-disable-next-line
     function getRate() public view override returns (uint256) {
-        return uint256(100000000);
+        return oracle.price(address(usdc)) * 100;
+    }
+
+    function updateRate() public override {
+        oracle.updateUnderlyingPrice(address(usdc));
     }
 
     function intakeRawAndGetBalance(uint256 _amount) external override returns (int128 amount_, int128 balance_) {

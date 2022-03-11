@@ -20,6 +20,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../lib/ABDKMath64x64.sol";
 import "../interfaces/IAssimilator.sol";
+import "../interfaces/IOracleTwap.sol";
 
 contract UsdtToUsdAssimilator is IAssimilator {
     using ABDKMath64x64 for int128;
@@ -31,11 +32,17 @@ contract UsdtToUsdAssimilator is IAssimilator {
 
     IERC20 private constant xsgd = IERC20(0xbB06DCA3AE6887fAbF931640f67cab3e3a16F4dC);
 
+    IOracleTwap public constant oracle = IOracleTwap(0x87ac4b06EB0db3A4eE13DF544A540F8f4a8E0679);
+
     // solhint-disable-next-line
     constructor() {}
 
     function getRate() public view override returns (uint256) {
-        return uint256(100000000);
+        return oracle.price(address(xsgd)) * 100;
+    }
+
+    function updateRate() public override {
+        oracle.updateUnderlyingPrice(address(xsgd));
     }
 
     // takes raw xsgd amount, transfers it in, calculates corresponding numeraire amount and returns it
