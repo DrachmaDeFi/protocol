@@ -1,9 +1,11 @@
 {
-  "assimilators": {
-    "UsdcToUsdAssimilator": "0x9A25b91f256974e34779baB2B91C661243eC9215",
-    "UsdtToUsdAssimilator": "0x2C09984E4a59fD2850A5D356cff34ed3207f1432"
-  },
-  "curves": {
-    "Drachma V2 USDC USDT LP": "0x2f06d8e1dB5A1960e6483C7B0801a9aD8f67Ff4c"
-  }
+    "assimilators": {
+        "UsdcToUsdAssimilator": "0x9A25b91f256974e34779baB2B91C661243eC9215",
+        "UsdtToUsdAssimilator": "0x2C09984E4a59fD2850A5D356cff34ed3207f1432",
+        "MetisToUsdAssimilator": "0x1c9b589b7e420892AdA7c977dab5C80dc613afAf"
+    },
+    "curves": {
+        "Drachma V2 USDC USDT LP": "0x2f06d8e1dB5A1960e6483C7B0801a9aD8f67Ff4c",
+        "Drachma V2 USDC METIS LP": "0x35aF3E139E8406BDCfe247752e622bDDbD8C7D68"
+    }
 }
