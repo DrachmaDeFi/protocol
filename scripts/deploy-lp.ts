@@ -85,7 +85,7 @@ async function main() {
   );
 
   deployments.curves[LP_NAME] = curve.address;
-  fs.writeFileSync(lpFilePath, JSON.stringify(deployments, null, 4));
+  fs.writeFileSync(lpFilePath, JSON.stringify(deployments, null, 2));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

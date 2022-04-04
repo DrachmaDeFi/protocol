@@ -95,7 +95,7 @@ async function main() {
   const network = await hre.ethers.provider.getNetwork();
   const outputDir = path.join(__dirname, `${network.chainId}`);
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
-  fs.writeFileSync(path.join(outputDir, `factory_deployed.json`), JSON.stringify(output, null, 4));
+  fs.writeFileSync(path.join(outputDir, `factory_deployed.json`), JSON.stringify(output, null, 2));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

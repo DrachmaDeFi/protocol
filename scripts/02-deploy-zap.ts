@@ -16,20 +16,18 @@ async function main() {
   const Zap = await ethers.getContractFactory("Zap");
 
   const zap = await deployContract({
-    name: "zap",
+    name: "Zap",
     deployer: user,
     factory: Zap,
     args: [],
   });
 
-  const output = {
-    zap: zap.address,
-  };
-
   const network = await hre.ethers.provider.getNetwork();
   const outputDir = path.join(__dirname, `${network.chainId}`);
-  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
-  fs.writeFileSync(path.join(outputDir, `zap_deployed.json`), JSON.stringify(output, null, 4));
+  const outputFilePath = path.join(outputDir, `factory_deployed.json`);
+  const deployments = JSON.parse(fs.readFileSync(outputFilePath, "utf-8"));
+  deployments.Zap = zap.address;
+  fs.writeFileSync(outputFilePath, JSON.stringify(deployments, null, 2));
 }
 
 // We recommend this pattern to be able to use async/await everywhere

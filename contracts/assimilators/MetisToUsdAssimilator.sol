@@ -22,7 +22,6 @@ import "../lib/ABDKMath64x64.sol";
 import "../interfaces/IAssimilator.sol";
 import "../interfaces/IOracleTwap.sol";
 
-
 contract MetisToUsdAssimilator is IAssimilator {
     using ABDKMath64x64 for int128;
     using ABDKMath64x64 for uint256;
@@ -45,7 +44,6 @@ contract MetisToUsdAssimilator is IAssimilator {
     function updateRate() public override {
         oracle.updateUnderlyingPrice(address(cadc));
     }
-
 
     // takes raw cadc amount, transfers it in, calculates corresponding numeraire amount and returns it
     function intakeRawAndGetBalance(uint256 _amount) external override returns (int128 amount_, int128 balance_) {

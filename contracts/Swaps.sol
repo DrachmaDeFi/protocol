@@ -44,14 +44,14 @@ library Swaps {
     }
 
     function _executeProtocolFee(
-        address _token,
+        address _assimilator,
         address _recipient,
         int128 _amt,
         int128 _amtAfterFee
     ) private {
         // calculate 10% of overall swap fee
-        int128 _protocolFee = _amt.sub(_amtAfterFee).div(10);
-        if (_protocolFee > 0) IERC20(_token).safeTransfer(_recipient, uint256(_protocolFee));
+        int128 _protocolFee = _amt.sub(_amtAfterFee) / 10;
+        Assimilators.outputNumeraire(_assimilator, _recipient, _protocolFee);
     }
 
     struct SwapParams {
@@ -83,7 +83,7 @@ library Swaps {
 
         _amt = _amt.us_mul(ONE - curve.epsilon);
 
-        _executeProtocolFee(p._origin, p._protocolFeeRecipient, _initialAmt, _amt);
+        _executeProtocolFee(_o.addr, p._protocolFeeRecipient, _initialAmt, _amt);
 
         tAmt_ = Assimilators.outputNumeraire(_t.addr, p._recipient, _amt);
 
@@ -153,7 +153,7 @@ library Swaps {
 
         _amt = _amt.us_mul(ONE + curve.epsilon);
 
-        _executeProtocolFee(p._origin, p._protocolFeeRecipient, _initialAmt, _amt);
+        _executeProtocolFee(_o.addr, p._protocolFeeRecipient, _initialAmt, _amt);
 
         oAmt_ = Assimilators.intakeNumeraire(_o.addr, _amt);
 

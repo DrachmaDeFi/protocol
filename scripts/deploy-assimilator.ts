@@ -26,12 +26,12 @@ async function main() {
   const outputDir = path.join(__dirname, `${network.chainId}`);
   const outputFilePath = path.join(outputDir, `lp.json`);
   if (!fs.existsSync(outputFilePath)) {
-    fs.writeFileSync(outputFilePath, JSON.stringify({ assimilators: {}, curves: {} }, null, 4));
+    fs.writeFileSync(outputFilePath, JSON.stringify({ assimilators: {}, curves: {} }, null, 2));
   }
 
   const deployments = JSON.parse(fs.readFileSync(outputFilePath, "utf-8"));
   deployments.assimilators[ASSIMILATOR_CONTRACT] = assm.address;
-  fs.writeFileSync(outputFilePath, JSON.stringify(deployments, null, 4));
+  fs.writeFileSync(outputFilePath, JSON.stringify(deployments, null, 2));
 }
 
 // We recommend this pattern to be able to use async/await everywhere
