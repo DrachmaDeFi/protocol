@@ -16,12 +16,12 @@ const EPSILON = parseUnits("0.0005");
 const LAMBDA = parseUnits("0.3");
 
 const QUOTE_CONTRACT = "UsdcToUsdAssimilator";
-const BASE_CONTRACT = "MetisToUsdAssimilator";
+const BASE_CONTRACT = "WethToUsdAssimilator";
 
 const QUOTE_TOKEN = "0xEA32A96608495e54156Ae48931A7c20f0dcc1a21";
-const BASE_TOKEN = "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000";
+const BASE_TOKEN = "0x420000000000000000000000000000000000000A";
 
-const LP_NAME = "Drachma V2 USDC METIS LP";
+const LP_NAME = "Drachma V2 USDC WETH LP";
 const LP_SYMBOL = "Drachma V2 LP";
 
 async function main() {

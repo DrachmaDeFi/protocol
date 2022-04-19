@@ -5,7 +5,7 @@ import fs from "fs";
 import { getAccounts, deployContract } from "./common";
 const { ethers } = hre;
 
-const ASSIMILATOR_CONTRACT = "MetisToUsdAssimilator";
+const ASSIMILATOR_CONTRACT = "WethToUsdAssimilator";
 
 async function main() {
   const { user } = await getAccounts();
